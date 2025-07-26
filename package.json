@@ -1,0 +1,78 @@
+{
+  "name": "agent-intervector-command-center",
+  "version": "1.0.0",
+  "description": "Complete Agent Command Center with ChromaDB Intervector Communication System",
+  "main": "server/index.js",
+  "scripts": {
+    "dev": "concurrently \"npm run server\" \"npm run client\"",
+    "server": "cd server && nodemon index.js",
+    "client": "cd client && npm start",
+    "build": "cd client && npm run build",
+    "install-all": "npm install && cd client && npm install && cd ../server && npm install",
+    "setup-chromadb": "python scripts/setup-chromadb.py",
+    "bootstrap-agents": "node scripts/agent-bootstrap.js",
+    "start": "cd server && node index.js",
+    "test": "npm run test:server && npm run test:client",
+    "test:server": "cd server && npm test",
+    "test:client": "cd client && npm test"
+  },
+  "keywords": [
+    "ai-agents",
+    "chromadb",
+    "intervector-communication",
+    "mern-stack",
+    "multi-agent-system",
+    "hive-mind",
+    "agent-coordination",
+    "vector-database",
+    "prometheus-theo",
+    "kevin-gardner"
+  ],
+  "author": {
+    "name": "PROMETHEUS & THEO-5001",
+    "email": "agents@hivemind.ai",
+    "url": "https://github.com/devklg/agent-intervector-command-center"
+  },
+  "contributors": [
+    {
+      "name": "PROMETHEUS",
+      "role": "Architecture & Coordination Lead"
+    },
+    {
+      "name": "THEO-5001", 
+      "role": "Frontend Development & Implementation"
+    },
+    {
+      "name": "MARCUS-5002",
+      "role": "Backend Development"
+    },
+    {
+      "name": "Kevin Gardner",
+      "role": "System Orchestrator & Vision Lead"
+    }
+  ],
+  "license": "MIT",
+  "devDependencies": {
+    "concurrently": "^8.2.2",
+    "nodemon": "^3.0.1"
+  },
+  "dependencies": {
+    "express": "^4.18.2",
+    "cors": "^2.8.5",
+    "dotenv": "^16.3.1",
+    "helmet": "^7.0.0",
+    "morgan": "^1.10.0"
+  },
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=8.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/devklg/agent-intervector-command-center.git"
+  },
+  "bugs": {
+    "url": "https://github.com/devklg/agent-intervector-command-center/issues"
+  },
+  "homepage": "https://github.com/devklg/agent-intervector-command-center#readme"
+}
