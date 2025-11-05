@@ -2,7 +2,7 @@ const axios = require('axios');
 
 class ChromaService {
   constructor() {
-    this.baseURL = process.env.CHROMA_API_URL || 'http://localhost:8000';
+    this.baseURL = process.env.CHROMA_API_URL || 'http://localhost:7501';
     this.client = axios.create({
       baseURL: this.baseURL,
       timeout: 10000,

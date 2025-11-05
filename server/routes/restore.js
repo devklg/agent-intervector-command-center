@@ -37,7 +37,7 @@ router.post('/create', validateRestorePoint, async (req, res) => {
       
       technical_state: {
         database_connections: ['chromadb', 'mongodb'],
-        active_ports: [3000, 5001, 5173],
+        active_ports: [3000, 7500, 5173],
         file_locations: ['D:/BMAD', 'D:/databases/chromadb'],
         git_branches: ['main', 'prometheus-coordination', 'theo-development'],
         system_health: 'excellent'

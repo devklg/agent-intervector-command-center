@@ -146,14 +146,14 @@ export default function Settings() {
           <div className="space-y-2">
             <Label>ChromaDB Port</Label>
             <Input
-              defaultValue={process.env.REACT_APP_CHROMA_PORT || '8000'}
+              defaultValue={process.env.REACT_APP_CHROMA_PORT || '7501'}
               disabled
             />
           </div>
           <div className="space-y-2">
             <Label>API Endpoint</Label>
             <Input
-              defaultValue={process.env.REACT_APP_API_URL || 'http://localhost:5001'}
+              defaultValue={process.env.REACT_APP_API_URL || 'http://localhost:7500'}
               disabled
             />
           </div>
