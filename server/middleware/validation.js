@@ -21,11 +21,11 @@ const messageSchema = Joi.object({
 
 // Agent registration schema
 const agentSchema = Joi.object({
-  agent_name: Joi.string().required().max(50),
-  agent_type: Joi.string().valid('coordinator', 'developer', 'specialist', 'monitor').required(),
-  specialties: Joi.string().optional().max(200),
+  name: Joi.string().required().max(50),
+  type: Joi.string().valid('coordinator', 'developer', 'specialist', 'monitor').required(),
+  specialties: Joi.array().items(Joi.string()).optional(),
   description: Joi.string().optional().max(500),
-  config: Joi.object().optional()
+  priority: Joi.string().valid('CRITICAL', 'HIGH', 'MEDIUM', 'LOW').default('MEDIUM')
 });
 
 // Project schema
