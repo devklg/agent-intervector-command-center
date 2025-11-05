@@ -17,6 +17,7 @@ function App() {
         <Layout>
           <Routes>
             <Route path="/" element={<Dashboard />} />
+            <Route path="/agents" element={<Dashboard />} />
             <Route path="/agents/:agentId" element={<AgentDetails />} />
             <Route path="/communication" element={<CommunicationCenter />} />
             <Route path="/projects" element={<ProjectManager />} />
