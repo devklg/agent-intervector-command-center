@@ -36,7 +36,7 @@ const SPECIALTIES = {
 class AgentBootstrap {
   constructor() {
     this.chromaHost = process.env.CHROMA_HOST || 'localhost';
-    this.chromaPort = process.env.CHROMA_PORT || 8000;
+    this.chromaPort = process.env.CHROMA_PORT || 7501;
     this.agentConfigPath = path.join(__dirname, '../config/agents.json');
   }
 

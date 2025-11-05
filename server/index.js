@@ -7,7 +7,7 @@ const rateLimit = require('express-rate-limit');
 require('dotenv').config();
 
 const app = express();
-const PORT = process.env.PORT || 5001;
+const PORT = process.env.PORT || 7500;
 
 // Security middleware
 app.use(helmet());
@@ -72,7 +72,7 @@ app.use('*', (req, res) => {
 app.listen(PORT, () => {
   console.log(`\n🚀 Agent Command Center Backend`);
   console.log(`📡 Server running on port ${PORT}`);
-  console.log(`🧠 ChromaDB Integration: ${process.env.CHROMA_HOST || 'localhost'}:${process.env.CHROMA_PORT || 8000}`);
+  console.log(`🧠 ChromaDB Integration: ${process.env.CHROMA_HOST || 'localhost'}:${process.env.CHROMA_PORT || 7501}`);
   console.log(`🔗 Environment: ${process.env.NODE_ENV || 'development'}`);
   console.log(`\n⚡ Ready for Intervector Communication!\n`);
 });
