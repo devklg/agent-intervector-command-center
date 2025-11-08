@@ -10,6 +10,7 @@
     "build": "cd client && npm run build",
     "install-all": "npm install && cd client && npm install && cd ../server && npm install",
     "setup-chromadb": "python scripts/setup-chromadb.py",
+    "setup-knowledge-base": "node scripts/run-migrations.js",
     "bootstrap-agents": "node scripts/agent-bootstrap.js",
     "start": "cd server && node index.js",
     "test": "npm run test:server && npm run test:client",
