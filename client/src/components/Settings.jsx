@@ -2,7 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from './ui/card';
 import { Button } from './ui/button';
 import { Badge } from './ui/badge';
-import { Input, Label } from './ui/input';
+import { Input } from './ui/input';
+import { Label } from './ui/label';
 import { useToast } from './ui/use-toast';
 import { Settings as SettingsIcon, Database, Zap, Shield, Bell } from 'lucide-react';
 import api from '../services/api';
@@ -52,8 +53,8 @@ export default function Settings() {
   return (
     <div className="space-y-6">
       <div>
-        <h2 className="text-3xl font-bold text-gray-900">Settings</h2>
-        <p className="text-gray-600">System configuration and health monitoring</p>
+        <h2 className="text-3xl font-bold gradient-text">Settings</h2>
+        <p className="text-gray-400">System configuration and health monitoring</p>
       </div>
 
       {/* System Health */}
@@ -139,21 +140,21 @@ export default function Settings() {
           <div className="space-y-2">
             <Label>ChromaDB Host</Label>
             <Input
-              defaultValue={process.env.REACT_APP_CHROMA_HOST || 'localhost'}
+              defaultValue={import.meta.env.VITE_CHROMA_HOST || 'localhost'}
               disabled
             />
           </div>
           <div className="space-y-2">
             <Label>ChromaDB Port</Label>
             <Input
-              defaultValue={process.env.REACT_APP_CHROMA_PORT || '7501'}
+              defaultValue={import.meta.env.VITE_CHROMA_PORT || '8000'}
               disabled
             />
           </div>
           <div className="space-y-2">
             <Label>API Endpoint</Label>
             <Input
-              defaultValue={process.env.REACT_APP_API_URL || 'http://localhost:7500'}
+              defaultValue={import.meta.env.VITE_API_URL || 'http://localhost:7500'}
               disabled
             />
           </div>

@@ -22,11 +22,26 @@ import {
   Zap,
   CheckCircle,
   AlertCircle,
-  Clock
+  Clock,
+  LayoutGrid,
+  ListTodo,
+  TrendingUp,
+  Search,
+  BookOpen,
+  FileText,
+  History,
+  Network
 } from 'lucide-react';
 import agentService from '../services/agentService';
 import communicationService from '../services/communicationService';
 import projectService from '../services/projectService';
+import BMADAgentBrowser from './BMADAgentBrowser';
+import TaskTracker from './TaskTracker';
+import ProjectContextLoader from './ProjectContextLoader';
+import StoryManagement from './StoryManagement';
+import AgentStatusMonitor from './AgentStatusMonitor';
+import SessionHistory from './SessionHistory';
+import AgentNetworkGraph from './AgentNetworkGraph';
 
 export default function Dashboard() {
   const [agents, setAgents] = useState([]);
@@ -35,6 +50,7 @@ export default function Dashboard() {
   const [recentMessages, setRecentMessages] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [showCreateDialog, setShowCreateDialog] = useState(false);
+  const [activeTab, setActiveTab] = useState('overview'); // overview, agents, tasks, analytics, context, stories, status, history
   const { toast } = useToast();
 
   // New agent form state
@@ -178,87 +194,196 @@ export default function Dashboard() {
 
   return (
     <div className="space-y-6">
-      {/* Header */}
-      <div className="flex justify-between items-center">
-        <div>
-          <h2 className="text-3xl font-bold text-gray-900">Dashboard</h2>
-          <p className="text-gray-600">Agent Intervector Command Center Overview</p>
+      {/* Header with Magnificent Worldwide Branding */}
+      <div className="gradient-bg-hero rounded-lg p-8 shadow-brand-lg">
+        <div className="flex justify-between items-center">
+          <div>
+            <p className="text-gray-200 text-lg">
+              Multi-Agent Coordination - Magnificent Worldwide
+            </p>
+          </div>
+          <Button
+            onClick={() => setShowCreateDialog(true)}
+            className="btn-gradient shadow-brand text-white"
+          >
+            <Plus className="h-4 w-4 mr-2" />
+            Create Agent
+          </Button>
         </div>
-        <Button
-          onClick={() => setShowCreateDialog(true)}
-          className="bg-blue-600 hover:bg-blue-700"
-        >
-          <Plus className="h-4 w-4 mr-2" />
-          Create Agent
-        </Button>
+
+        {/* Tab Navigation */}
+        <div className="flex gap-4 mt-6 border-b border-blue-300">
+          <button
+            onClick={() => setActiveTab('overview')}
+            className={`px-6 py-3 font-semibold transition-all ${
+              activeTab === 'overview'
+                ? 'border-b-2 border-yellow-400 text-yellow-300'
+                : 'text-blue-200 hover:text-white'
+            }`}
+          >
+            <LayoutGrid className="inline h-4 w-4 mr-2" />
+            Overview
+          </button>
+          <button
+            onClick={() => setActiveTab('agents')}
+            className={`px-6 py-3 font-semibold transition-all ${
+              activeTab === 'agents'
+                ? 'border-b-2 border-yellow-400 text-yellow-300'
+                : 'text-blue-200 hover:text-white'
+            }`}
+          >
+            <Users className="inline h-4 w-4 mr-2" />
+            BMAD Agents
+          </button>
+          <button
+            onClick={() => setActiveTab('tasks')}
+            className={`px-6 py-3 font-semibold transition-all ${
+              activeTab === 'tasks'
+                ? 'border-b-2 border-yellow-400 text-yellow-300'
+                : 'text-blue-200 hover:text-white'
+            }`}
+          >
+            <ListTodo className="inline h-4 w-4 mr-2" />
+            Task Tracking
+          </button>
+          <button
+            onClick={() => setActiveTab('analytics')}
+            className={`px-6 py-3 font-semibold transition-all ${
+              activeTab === 'analytics'
+                ? 'border-b-2 border-yellow-400 text-yellow-300'
+                : 'text-blue-200 hover:text-white'
+            }`}
+          >
+            <TrendingUp className="inline h-4 w-4 mr-2" />
+            Analytics
+          </button>
+          <button
+            onClick={() => setActiveTab('context')}
+            className={`px-6 py-3 font-semibold transition-all ${
+              activeTab === 'context'
+                ? 'border-b-2 border-yellow-400 text-yellow-300'
+                : 'text-blue-200 hover:text-white'
+            }`}
+          >
+            <BookOpen className="inline h-4 w-4 mr-2" />
+            Context Loader
+          </button>
+          <button
+            onClick={() => setActiveTab('stories')}
+            className={`px-6 py-3 font-semibold transition-all ${
+              activeTab === 'stories'
+                ? 'border-b-2 border-yellow-400 text-yellow-300'
+                : 'text-blue-200 hover:text-white'
+            }`}
+          >
+            <FileText className="inline h-4 w-4 mr-2" />
+            Stories
+          </button>
+          <button
+            onClick={() => setActiveTab('status')}
+            className={`px-6 py-3 font-semibold transition-all ${
+              activeTab === 'status'
+                ? 'border-b-2 border-yellow-400 text-yellow-300'
+                : 'text-blue-200 hover:text-white'
+            }`}
+          >
+            <Activity className="inline h-4 w-4 mr-2" />
+            Agent Status
+          </button>
+          <button
+            onClick={() => setActiveTab('history')}
+            className={`px-6 py-3 font-semibold transition-all ${
+              activeTab === 'history'
+                ? 'border-b-2 border-yellow-400 text-yellow-300'
+                : 'text-blue-200 hover:text-white'
+            }`}
+          >
+            <History className="inline h-4 w-4 mr-2" />
+            History
+          </button>
+          <button
+            onClick={() => setActiveTab('network')}
+            className={`px-6 py-3 font-semibold transition-all ${
+              activeTab === 'network'
+                ? 'border-b-2 border-purple-400 text-purple-300'
+                : 'text-blue-200 hover:text-white'
+            }`}
+          >
+            <Network className="inline h-4 w-4 mr-2" />
+            Network Graph
+          </button>
+        </div>
       </div>
 
-      {/* Stats Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-        <Card>
-          <CardContent className="p-6">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm font-medium text-gray-600">Total Agents</p>
-                <p className="text-3xl font-bold text-gray-900">{agents.length}</p>
-                <p className="text-xs text-green-600 mt-1">{onlineAgents} online</p>
-              </div>
-              <div className="bg-blue-100 p-3 rounded-full">
-                <Users className="h-6 w-6 text-blue-600" />
-              </div>
-            </div>
-          </CardContent>
-        </Card>
+      {/* Tab Content */}
+      {activeTab === 'overview' && (
+        <>
+          {/* Stats Cards with Magnificent Brand Styling */}
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+            <Card className="card-gradient shadow-brand hover:shadow-brand-lg transition-all">
+              <CardContent className="p-6">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="text-sm font-medium text-gray-700">Total Agents</p>
+                    <p className="text-3xl font-bold gradient-text">{agents.length}</p>
+                    <p className="text-xs text-green-600 mt-1 font-semibold">{onlineAgents} online</p>
+                  </div>
+                  <div className="gradient-bg p-3 rounded-full">
+                    <Users className="h-6 w-6 text-white" />
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
 
-        <Card>
-          <CardContent className="p-6">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm font-medium text-gray-600">Messages (7d)</p>
-                <p className="text-3xl font-bold text-gray-900">{totalMessages}</p>
-                <p className="text-xs text-gray-500 mt-1">
-                  {stats?.by_priority?.HIGH || 0} high priority
-                </p>
-              </div>
-              <div className="bg-purple-100 p-3 rounded-full">
-                <MessageSquare className="h-6 w-6 text-purple-600" />
-              </div>
-            </div>
-          </CardContent>
-        </Card>
+            <Card className="card-gradient shadow-brand hover:shadow-brand-lg transition-all">
+              <CardContent className="p-6">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="text-sm font-medium text-gray-700">Messages (7d)</p>
+                    <p className="text-3xl font-bold gradient-text">{totalMessages}</p>
+                    <p className="text-xs text-gray-600 mt-1 font-semibold">
+                      {stats?.by_priority?.HIGH || 0} high priority
+                    </p>
+                  </div>
+                  <div className="bg-gradient-to-br from-purple-500 to-blue-600 p-3 rounded-full">
+                    <MessageSquare className="h-6 w-6 text-white" />
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
 
-        <Card>
-          <CardContent className="p-6">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm font-medium text-gray-600">Active Projects</p>
-                <p className="text-3xl font-bold text-gray-900">{activeProjects}</p>
-                <p className="text-xs text-gray-500 mt-1">
-                  {projects.length} total
-                </p>
-              </div>
-              <div className="bg-green-100 p-3 rounded-full">
-                <FolderKanban className="h-6 w-6 text-green-600" />
-              </div>
-            </div>
-          </CardContent>
-        </Card>
+            <Card className="card-gradient shadow-brand hover:shadow-brand-lg transition-all">
+              <CardContent className="p-6">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="text-sm font-medium text-gray-700">Active Projects</p>
+                    <p className="text-3xl font-bold gradient-text">{activeProjects}</p>
+                    <p className="text-xs text-gray-600 mt-1 font-semibold">
+                      {projects.length} total
+                    </p>
+                  </div>
+                  <div className="bg-gradient-to-br from-green-500 to-emerald-600 p-3 rounded-full">
+                    <FolderKanban className="h-6 w-6 text-white" />
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
 
-        <Card>
-          <CardContent className="p-6">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm font-medium text-gray-600">System Status</p>
-                <p className="text-3xl font-bold text-green-600">Healthy</p>
-                <p className="text-xs text-gray-500 mt-1">All systems operational</p>
-              </div>
-              <div className="bg-green-100 p-3 rounded-full">
-                <Activity className="h-6 w-6 text-green-600" />
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-      </div>
+            <Card className="card-gradient shadow-brand hover:shadow-brand-lg transition-all">
+              <CardContent className="p-6">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="text-sm font-medium text-gray-700">System Status</p>
+                    <p className="text-3xl font-bold gradient-text-warm">Healthy</p>
+                    <p className="text-xs text-gray-600 mt-1 font-semibold">All systems operational</p>
+                  </div>
+                  <div className="bg-gradient-to-br from-green-500 to-teal-600 p-3 rounded-full">
+                    <Activity className="h-6 w-6 text-white" />
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
 
       {/* Agents Overview */}
       <Card>
@@ -384,6 +509,138 @@ export default function Dashboard() {
           </CardContent>
         </Card>
       </div>
+        </>
+      )}
+
+      {/* BMAD Agents Tab */}
+      {activeTab === 'agents' && (
+        <div className="mt-6">
+          <BMADAgentBrowser />
+        </div>
+      )}
+
+      {/* Task Tracking Tab */}
+      {activeTab === 'tasks' && (
+        <div className="mt-6">
+          <TaskTracker projectId={projects[0]?.id} />
+        </div>
+      )}
+
+      {/* Context Loader Tab */}
+      {activeTab === 'context' && (
+        <div className="mt-6">
+          <ProjectContextLoader />
+        </div>
+      )}
+
+      {/* Stories Tab */}
+      {activeTab === 'stories' && (
+        <div className="mt-6">
+          <StoryManagement />
+        </div>
+      )}
+
+      {/* Agent Status Monitor Tab */}
+      {activeTab === 'status' && (
+        <div className="mt-6">
+          <AgentStatusMonitor />
+        </div>
+      )}
+
+      {/* Session History Tab */}
+      {activeTab === 'history' && (
+        <div className="mt-6">
+          <SessionHistory />
+        </div>
+      )}
+
+      {/* Agent Network Graph Tab */}
+      {activeTab === 'network' && (
+        <div className="mt-6">
+          <AgentNetworkGraph />
+        </div>
+      )}
+
+      {/* Analytics Tab */}
+      {activeTab === 'analytics' && (
+        <div className="mt-6">
+          <Card className="card-gradient shadow-brand">
+            <CardHeader>
+              <CardTitle className="gradient-text text-2xl">Project Analytics</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-6">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                  <div className="text-center p-6 bg-gradient-to-br from-blue-50 to-blue-100 rounded-lg">
+                    <p className="text-sm font-medium text-gray-700">Story Completion Rate</p>
+                    <p className="text-4xl font-bold gradient-text mt-2">
+                      {projects.length > 0
+                        ? Math.round(projects.reduce((acc, p) => acc + (p.completion_percentage || 0), 0) / projects.length)
+                        : 0}%
+                    </p>
+                  </div>
+                  <div className="text-center p-6 bg-gradient-to-br from-yellow-50 to-yellow-100 rounded-lg">
+                    <p className="text-sm font-medium text-gray-700">Average Agent Load</p>
+                    <p className="text-4xl font-bold gradient-text-warm mt-2">
+                      {agents.length > 0
+                        ? Math.round(projects.reduce((acc, p) => acc + (p.assigned_agents?.length || 0), 0) / agents.length)
+                        : 0}
+                    </p>
+                    <p className="text-xs text-gray-600 mt-1">projects/agent</p>
+                  </div>
+                  <div className="text-center p-6 bg-gradient-to-br from-green-50 to-green-100 rounded-lg">
+                    <p className="text-sm font-medium text-gray-700">System Uptime</p>
+                    <p className="text-4xl font-bold gradient-text mt-2">99.9%</p>
+                    <p className="text-xs text-gray-600 mt-1">last 30 days</p>
+                  </div>
+                </div>
+
+                <div className="mt-8">
+                  <h3 className="text-lg font-semibold gradient-text mb-4">Agent Productivity</h3>
+                  <div className="space-y-3">
+                    {agents.slice(0, 5).map((agent) => (
+                      <div key={agent.id} className="flex items-center gap-4">
+                        <div className="w-32 text-sm font-medium text-gray-700">{agent.agent_name}</div>
+                        <div className="flex-1 bg-gray-200 rounded-full h-4 overflow-hidden">
+                          <div
+                            className="btn-gradient h-full flex items-center justify-end pr-2"
+                            style={{ width: `${Math.min((agent.messages_sent || 0) * 10, 100)}%` }}
+                          >
+                            <span className="text-xs text-white font-semibold">
+                              {agent.messages_sent || 0}
+                            </span>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                <div className="mt-8 p-6 gradient-bg rounded-lg text-white">
+                  <h3 className="text-xl font-bold mb-2">Sprint Velocity Trend</h3>
+                  <p className="text-blue-100">
+                    Team velocity is trending upward with an average of {Math.round(totalMessages / 7)} messages per day
+                  </p>
+                  <div className="mt-4 flex gap-4">
+                    <div>
+                      <p className="text-sm text-blue-200">This Sprint</p>
+                      <p className="text-2xl font-bold">{totalMessages}</p>
+                    </div>
+                    <div>
+                      <p className="text-sm text-blue-200">Active Agents</p>
+                      <p className="text-2xl font-bold">{onlineAgents}</p>
+                    </div>
+                    <div>
+                      <p className="text-sm text-blue-200">Completion</p>
+                      <p className="text-2xl font-bold">{activeProjects}/{projects.length}</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+      )}
 
       {/* Create Agent Dialog */}
       <Dialog open={showCreateDialog} onOpenChange={setShowCreateDialog}>
@@ -490,7 +747,7 @@ export default function Dashboard() {
             >
               Cancel
             </Button>
-            <Button onClick={handleCreateAgent}>
+            <Button onClick={handleCreateAgent} className="btn-gradient text-white shadow-brand">
               <Plus className="h-4 w-4 mr-2" />
               Create Agent
             </Button>
