@@ -8,7 +8,7 @@ import RestorePointManager from './components/RestorePointManager';
 import Settings from './components/Settings';
 import Layout from './components/Layout';
 import { Toaster } from './components/ui/toaster';
-import './app.css';
+import './App.css';
 
 function App() {
   return (

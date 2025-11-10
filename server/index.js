@@ -45,6 +45,13 @@ app.use('/api/projects', require('./routes/projects'));
 app.use('/api/restore', require('./routes/restore'));
 app.use('/api/health', require('./routes/health'));
 app.use('/api/knowledge', require('./routes/knowledge'));
+app.use('/api/tasks', require('./routes/tasks'));
+app.use('/api/bmad-agents', require('./routes/bmad-agents'));
+app.use('/api/activation', require('./routes/activation'));
+
+// Neo4j and Neon database routes
+app.use('/api/neo4j', require('./routes/neo4j'));
+app.use('/api/neon', require('./routes/neon'));
 
 // Health check endpoint
 app.get('/health', (req, res) => {

@@ -23,9 +23,9 @@ export default function Layout({ children }) {
   const location = useLocation();
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gray-900">
       {/* Header */}
-      <header className="bg-white shadow-sm border-b sticky top-0 z-40">
+      <header className="bg-gray-800 shadow-sm border-b border-gray-700 sticky top-0 z-40">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center py-4">
             <div className="flex items-center gap-3">
@@ -33,19 +33,19 @@ export default function Layout({ children }) {
                 <Zap className="h-6 w-6 text-white" />
               </div>
               <div>
-                <h1 className="text-xl font-bold text-gray-900">
+                <h1 className="text-xl font-bold gradient-text">
                   Agent Intervector Command Center
                 </h1>
-                <p className="text-xs text-gray-500">
+                <p className="text-xs text-gray-400">
                   Zero-Token Multi-Agent Coordination
                 </p>
               </div>
             </div>
 
             <div className="flex items-center gap-2">
-              <div className="flex items-center gap-2 px-3 py-1.5 bg-green-50 rounded-full">
+              <div className="flex items-center gap-2 px-3 py-1.5 bg-green-900 border border-green-700 rounded-full">
                 <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
-                <span className="text-xs font-medium text-green-700">System Online</span>
+                <span className="text-xs font-medium text-green-300">System Online</span>
               </div>
             </div>
           </div>
@@ -53,7 +53,7 @@ export default function Layout({ children }) {
       </header>
 
       {/* Navigation */}
-      <nav className="bg-white border-b sticky top-[73px] z-30">
+      <nav className="bg-gray-800 border-b border-gray-700 sticky top-[73px] z-30">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex space-x-8">
             {navigation.map((item) => {
@@ -67,8 +67,8 @@ export default function Layout({ children }) {
                   to={item.to}
                   className={`flex items-center gap-2 px-3 py-4 text-sm font-medium border-b-2 transition-colors ${
                     isActive
-                      ? 'border-blue-600 text-blue-600'
-                      : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                      ? 'border-yellow-400 text-yellow-400'
+                      : 'border-transparent text-gray-400 hover:text-gray-200 hover:border-gray-500'
                   }`}
                 >
                   <Icon className="h-4 w-4" />
@@ -86,11 +86,11 @@ export default function Layout({ children }) {
       </main>
 
       {/* Footer */}
-      <footer className="bg-white border-t mt-auto">
+      <footer className="bg-gray-800 border-t border-gray-700 mt-auto">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
-          <div className="text-center text-sm text-gray-500">
+          <div className="text-center text-sm text-gray-400">
             <p>
-              Designed by <span className="font-semibold text-blue-600">PROMETHEUS</span> & <span className="font-semibold text-purple-600">THEO-5001</span>
+              Designed by <span className="font-semibold gradient-text">PROMETHEUS</span> & <span className="font-semibold gradient-text-warm">THEO-5001</span>
             </p>
             <p className="text-xs mt-1">
               Intervector Communication Protocol v1.0 • Zero-Token Coordination

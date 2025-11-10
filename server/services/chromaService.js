@@ -2,7 +2,9 @@ const axios = require('axios');
 
 class ChromaService {
   constructor() {
-    this.baseURL = process.env.CHROMA_API_URL || 'http://localhost:7501';
+    this.baseURL = process.env.CHROMA_API_URL || 'http://localhost:8000';
+    this.tenant = 'default_tenant';
+    this.database = 'default_database';
     this.client = axios.create({
       baseURL: this.baseURL,
       timeout: 10000,
@@ -10,12 +12,71 @@ class ChromaService {
         'Content-Type': 'application/json'
       }
     });
+    this.collections = {};
+    this.initialized = false;
+  }
+
+  async initialize() {
+    if (this.initialized) return;
+
+    try {
+      await this.ensureCollections();
+      this.initialized = true;
+      console.log('✅ ChromaDB Service initialized successfully');
+    } catch (error) {
+      console.error('❌ ChromaDB initialization error:', error.message);
+      throw error;
+    }
+  }
+
+  async getCollection(name) {
+    if (!this.collections[name]) {
+      try {
+        // v2 API: Create collection under tenant/database hierarchy
+        const endpoint = `/api/v2/tenants/${this.tenant}/databases/${this.database}/collections`;
+
+        // First try to list collections and find existing one
+        const listResponse = await this.client.get(endpoint);
+        const existingCollection = listResponse.data.find(col => col.name === name);
+
+        if (existingCollection) {
+          this.collections[name] = {
+            id: existingCollection.id,
+            name: existingCollection.name
+          };
+        } else {
+          // Create new collection
+          const createResponse = await this.client.post(endpoint, {
+            name,
+            metadata: {
+              description: `Collection for ${name}`,
+              created_by: 'agent_command_center',
+              purpose: 'intervector_communication'
+            }
+          });
+          this.collections[name] = {
+            id: createResponse.data.id,
+            name: createResponse.data.name
+          };
+        }
+      } catch (error) {
+        console.error(`Error getting/creating collection ${name}:`, error.message);
+        throw error;
+      }
+    }
+    return this.collections[name];
   }
 
   // Agent Message Operations
   async addMessage(message) {
     try {
-      const response = await this.client.post('/api/v1/collections/agent_message_log/add', {
+      await this.initialize();
+      const collection = await this.getCollection('agent_message_log');
+
+      const endpoint = `/api/v2/tenants/${this.tenant}/databases/${this.database}/collections/${collection.id}/add`;
+
+      await this.client.post(endpoint, {
+        ids: [message.id],
         documents: [JSON.stringify(message)],
         metadatas: [{
           from_agent: message.from_agent,
@@ -26,9 +87,10 @@ class ChromaService {
           thread_id: message.thread_id || null,
           status: message.status || 'delivered'
         }],
-        ids: [message.id]
+        embeddings: [[]]  // Empty embedding for now
       });
-      return response.data;
+
+      return { success: true, id: message.id };
     } catch (error) {
       console.error('ChromaDB add message error:', error.message);
       throw new Error('Failed to add message to ChromaDB');
@@ -37,24 +99,31 @@ class ChromaService {
 
   async getMessages(filters = {}) {
     try {
-      const params = {
-        include: ['documents', 'metadatas'],
-        limit: filters.limit || 50,
-        offset: filters.offset || 0
-      };
+      await this.initialize();
+      const collection = await this.getCollection('agent_message_log');
 
-      if (filters.where) {
-        params.where = filters.where;
+      const endpoint = `/api/v2/tenants/${this.tenant}/databases/${this.database}/collections/${collection.id}/get`;
+
+      const response = await this.client.post(endpoint, {
+        limit: filters.limit || 50,
+        offset: filters.offset || 0,
+        include: ['documents', 'metadatas'],
+        where: filters.where
+      });
+
+      const results = response.data;
+
+      // Handle empty results
+      if (!results.documents || results.documents.length === 0) {
+        return { messages: [], total: 0 };
       }
 
-      const response = await this.client.post('/api/v1/collections/agent_message_log/get', params);
-      
       return {
-        messages: response.data.documents.map((doc, i) => ({
+        messages: results.documents.map((doc, i) => ({
           ...JSON.parse(doc),
-          metadata: response.data.metadatas[i]
+          metadata: results.metadatas[i]
         })),
-        total: response.data.documents.length
+        total: results.documents.length
       };
     } catch (error) {
       console.error('ChromaDB get messages error:', error.message);
@@ -64,20 +133,32 @@ class ChromaService {
 
   async searchMessages(query, filters = {}) {
     try {
-      const response = await this.client.post('/api/v1/collections/agent_message_log/query', {
+      await this.initialize();
+      const collection = await this.getCollection('agent_message_log');
+
+      const endpoint = `/api/v2/tenants/${this.tenant}/databases/${this.database}/collections/${collection.id}/query`;
+
+      const response = await this.client.post(endpoint, {
         query_texts: [query],
         n_results: filters.limit || 10,
-        where: filters.where,
-        include: ['documents', 'metadatas', 'distances']
+        include: ['documents', 'metadatas', 'distances'],
+        where: filters.where
       });
 
+      const results = response.data;
+
+      // Handle empty results
+      if (!results.documents || !results.documents[0] || results.documents[0].length === 0) {
+        return { messages: [], total: 0 };
+      }
+
       return {
-        messages: response.data.documents[0].map((doc, i) => ({
+        messages: results.documents[0].map((doc, i) => ({
           ...JSON.parse(doc),
-          metadata: response.data.metadatas[0][i],
-          similarity: response.data.distances[0][i]
+          metadata: results.metadatas[0][i],
+          similarity: results.distances[0][i]
         })),
-        total: response.data.documents[0].length
+        total: results.documents[0].length
       };
     } catch (error) {
       console.error('ChromaDB search messages error:', error.message);
@@ -88,6 +169,9 @@ class ChromaService {
   // Agent Directory Operations
   async updateAgentStatus(agentId, status) {
     try {
+      await this.initialize();
+      const collection = await this.getCollection('agent_directory');
+
       const agentData = {
         id: `agent_${agentId}`,
         agent_name: agentId,
@@ -98,7 +182,10 @@ class ChromaService {
         performance_metrics: status.performance_metrics || {}
       };
 
-      await this.client.post('/api/v1/collections/agent_directory/upsert', {
+      const endpoint = `/api/v2/tenants/${this.tenant}/databases/${this.database}/collections/${collection.id}/upsert`;
+
+      await this.client.post(endpoint, {
+        ids: [agentData.id],
         documents: [JSON.stringify(agentData)],
         metadatas: [{
           agent_name: agentId,
@@ -107,7 +194,7 @@ class ChromaService {
           last_seen: agentData.last_seen,
           specialties: status.specialties || ''
         }],
-        ids: [agentData.id]
+        embeddings: [[]]  // Empty embedding for now
       });
 
       return agentData;
@@ -119,13 +206,25 @@ class ChromaService {
 
   async getAgentDirectory() {
     try {
-      const response = await this.client.post('/api/v1/collections/agent_directory/get', {
+      await this.initialize();
+      const collection = await this.getCollection('agent_directory');
+
+      const endpoint = `/api/v2/tenants/${this.tenant}/databases/${this.database}/collections/${collection.id}/get`;
+
+      const response = await this.client.post(endpoint, {
         include: ['documents', 'metadatas']
       });
 
-      return response.data.documents.map((doc, i) => ({
+      const results = response.data;
+
+      // Handle empty results
+      if (!results.documents || results.documents.length === 0) {
+        return [];
+      }
+
+      return results.documents.map((doc, i) => ({
         ...JSON.parse(doc),
-        metadata: response.data.metadatas[i]
+        metadata: results.metadatas[i]
       }));
     } catch (error) {
       console.error('ChromaDB get agent directory error:', error.message);
@@ -136,7 +235,13 @@ class ChromaService {
   // Restore Point Operations
   async createRestorePoint(restorePoint) {
     try {
-      const response = await this.client.post('/api/v1/collections/session_restore_context/add', {
+      await this.initialize();
+      const collection = await this.getCollection('session_restore_context');
+
+      const endpoint = `/api/v2/tenants/${this.tenant}/databases/${this.database}/collections/${collection.id}/add`;
+
+      await this.client.post(endpoint, {
+        ids: [restorePoint.id],
         documents: [JSON.stringify(restorePoint)],
         metadatas: [{
           type: restorePoint.type,
@@ -146,9 +251,10 @@ class ChromaService {
           tags: restorePoint.metadata.tags.join(','),
           restore_complexity: restorePoint.metadata.restore_complexity
         }],
-        ids: [restorePoint.id]
+        embeddings: [[]]  // Empty embedding for now
       });
-      return response.data;
+
+      return { success: true, id: restorePoint.id };
     } catch (error) {
       console.error('ChromaDB create restore point error:', error.message);
       throw new Error('Failed to create restore point in ChromaDB');
@@ -157,14 +263,26 @@ class ChromaService {
 
   async getRestorePoints(limit = 20) {
     try {
-      const response = await this.client.post('/api/v1/collections/session_restore_context/get', {
-        include: ['documents', 'metadatas'],
-        limit: limit
+      await this.initialize();
+      const collection = await this.getCollection('session_restore_context');
+
+      const endpoint = `/api/v2/tenants/${this.tenant}/databases/${this.database}/collections/${collection.id}/get`;
+
+      const response = await this.client.post(endpoint, {
+        limit: limit,
+        include: ['documents', 'metadatas']
       });
 
-      return response.data.documents.map((doc, i) => ({
+      const results = response.data;
+
+      // Handle empty results
+      if (!results.documents || results.documents.length === 0) {
+        return [];
+      }
+
+      return results.documents.map((doc, i) => ({
         ...JSON.parse(doc),
-        metadata: response.data.metadatas[i]
+        metadata: results.metadatas[i]
       }));
     } catch (error) {
       console.error('ChromaDB get restore points error:', error.message);
@@ -174,16 +292,28 @@ class ChromaService {
 
   async searchRestorePoints(query, limit = 10) {
     try {
-      const response = await this.client.post('/api/v1/collections/session_restore_context/query', {
+      await this.initialize();
+      const collection = await this.getCollection('session_restore_context');
+
+      const endpoint = `/api/v2/tenants/${this.tenant}/databases/${this.database}/collections/${collection.id}/query`;
+
+      const response = await this.client.post(endpoint, {
         query_texts: [query],
         n_results: limit,
         include: ['documents', 'metadatas', 'distances']
       });
 
-      return response.data.documents[0].map((doc, i) => ({
+      const results = response.data;
+
+      // Handle empty results
+      if (!results.documents || !results.documents[0] || results.documents[0].length === 0) {
+        return [];
+      }
+
+      return results.documents[0].map((doc, i) => ({
         ...JSON.parse(doc),
-        metadata: response.data.metadatas[0][i],
-        similarity: response.data.distances[0][i]
+        metadata: results.metadatas[0][i],
+        similarity: results.distances[0][i]
       }));
     } catch (error) {
       console.error('ChromaDB search restore points error:', error.message);
@@ -194,10 +324,10 @@ class ChromaService {
   // Health Check
   async healthCheck() {
     try {
-      const response = await this.client.get('/api/v1/heartbeat');
+      const response = await this.client.get('/api/v2/heartbeat');
       return {
         status: 'healthy',
-        chromadb_version: response.data.nanosecond_heartbeat,
+        chromadb_heartbeat: response.data,
         connection: 'active'
       };
     } catch (error) {
@@ -214,27 +344,20 @@ class ChromaService {
   async ensureCollections() {
     const collections = [
       'agent_message_log',
-      'agent_directory', 
+      'agent_directory',
       'session_restore_context',
       'command_center_knowledge',
       'command_center_intelligence'
     ];
 
     try {
-      for (const collection of collections) {
-        await this.client.post('/api/v1/collections', {
-          name: collection,
-          metadata: {
-            description: `Collection for ${collection}`,
-            created_by: 'agent_command_center',
-            purpose: 'intervector_communication'
-          }
-        });
+      for (const collectionName of collections) {
+        await this.getCollection(collectionName);
       }
       console.log('✅ ChromaDB collections verified/created');
     } catch (error) {
-      // Collections might already exist, which is fine
-      console.log('ℹ️  ChromaDB collections already exist or error:', error.message);
+      console.log('⚠️  ChromaDB collections setup warning:', error.message);
+      throw error;
     }
   }
 }
