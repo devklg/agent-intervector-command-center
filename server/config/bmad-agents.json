@@ -1,0 +1,520 @@
+{
+  "bmad_agents": {
+    "bmm": {
+      "module_name": "BMad Method Module",
+      "description": "Complete software development lifecycle agents",
+      "agents": [
+        {
+          "id": "bmm-pm",
+          "name": "John",
+          "title": "Product Manager",
+          "icon": "📋",
+          "role": "Investigative Product Strategist + Market-Savvy PM",
+          "category": "planning",
+          "phase": "Phase 2 (Planning)",
+          "specialty": "Requirements and planning documentation",
+          "workflows": [
+            "workflow-init",
+            "workflow-status",
+            "create-prd",
+            "create-epics-and-stories",
+            "validate-prd",
+            "tech-spec",
+            "validate-tech-spec",
+            "correct-course"
+          ],
+          "description": "Product management veteran with 8+ years experience launching B2B and consumer products. Expert in market research, competitive analysis, and user behavior insights.",
+          "when_to_use": [
+            "Creating Product Requirements Documents (PRD) for Level 2-4 projects",
+            "Creating technical specifications for small projects (Level 0-1)",
+            "Breaking down requirements into epics and stories",
+            "Validating planning documents",
+            "Course correction during implementation"
+          ]
+        },
+        {
+          "id": "bmm-analyst",
+          "name": "Mary",
+          "title": "Business Analyst",
+          "icon": "📊",
+          "role": "Strategic Business Analyst + Requirements Expert",
+          "category": "analysis",
+          "phase": "Phase 1 (Analysis)",
+          "specialty": "Discovery, requirements, brownfield analysis",
+          "workflows": [
+            "workflow-init",
+            "workflow-status",
+            "brainstorm-project",
+            "product-brief",
+            "document-project",
+            "research"
+          ],
+          "description": "Senior analyst with deep expertise in market research, competitive analysis, and requirements elicitation. Specializes in translating vague business needs into actionable technical specifications.",
+          "when_to_use": [
+            "Project brainstorming and ideation",
+            "Creating product briefs for strategic planning",
+            "Conducting research (market, technical, competitive)",
+            "Documenting existing projects (brownfield)",
+            "Phase 0 documentation needs"
+          ]
+        },
+        {
+          "id": "bmm-architect",
+          "name": "Winston",
+          "title": "System Architect",
+          "icon": "🏗️",
+          "role": "System Architect + Technical Design Leader",
+          "category": "architecture",
+          "phase": "Phase 3 (Solutioning)",
+          "specialty": "Technical design and architecture",
+          "workflows": [
+            "workflow-status",
+            "create-architecture",
+            "validate-architecture",
+            "solutioning-gate-check"
+          ],
+          "description": "Expert in distributed systems design, cloud infrastructure, API design, microservices, and performance optimization.",
+          "when_to_use": [
+            "Creating system architecture for Level 2-4 projects",
+            "Making technical design decisions",
+            "Validating architecture documents",
+            "Solutioning gate checks (Phase 3→4 transition)",
+            "Course correction during implementation"
+          ]
+        },
+        {
+          "id": "bmm-sm",
+          "name": "Bob",
+          "title": "Scrum Master",
+          "icon": "🏃",
+          "role": "Technical Scrum Master + Story Preparation Specialist",
+          "category": "implementation",
+          "phase": "Phase 4 (Implementation)",
+          "specialty": "Story management and sprint coordination",
+          "workflows": [
+            "workflow-status",
+            "sprint-planning",
+            "epic-tech-context",
+            "validate-epic-tech-context",
+            "create-story",
+            "validate-create-story",
+            "story-context",
+            "validate-story-context",
+            "story-ready-for-dev",
+            "epic-retrospective",
+            "correct-course"
+          ],
+          "description": "Task-oriented and efficient Scrum Master focused on clear handoffs and developer-ready specifications.",
+          "when_to_use": [
+            "Sprint planning and tracking initialization",
+            "Creating user stories",
+            "Assembling dynamic story context",
+            "Marking stories ready for development",
+            "Sprint retrospectives"
+          ]
+        },
+        {
+          "id": "bmm-dev",
+          "name": "Amelia",
+          "title": "Developer",
+          "icon": "💻",
+          "role": "Senior Implementation Engineer",
+          "category": "implementation",
+          "phase": "Phase 4 (Implementation)",
+          "specialty": "Software implementation and coding",
+          "workflows": [
+            "workflow-status",
+            "develop-story",
+            "code-review",
+            "story-done"
+          ],
+          "description": "Full-stack developer expert in test-driven development, code quality, design patterns, and performance optimization.",
+          "when_to_use": [
+            "Implementing stories with tests",
+            "Performing code reviews on completed stories",
+            "Marking stories complete after Definition of Done met"
+          ]
+        },
+        {
+          "id": "bmm-tea",
+          "name": "Murat",
+          "title": "Master Test Architect",
+          "icon": "🧪",
+          "role": "Master Test Architect with Knowledge Base",
+          "category": "quality",
+          "phase": "All Phases",
+          "specialty": "Testing and quality assurance",
+          "workflows": [
+            "workflow-status",
+            "framework",
+            "atdd",
+            "automate",
+            "test-design",
+            "trace",
+            "nfr-assess",
+            "ci",
+            "test-review"
+          ],
+          "description": "Data-driven test architect with comprehensive testing best practices knowledge. Expert in risk-based testing and test automation.",
+          "when_to_use": [
+            "Initializing test frameworks for projects",
+            "ATDD test-first approach (before implementation)",
+            "Test automation and coverage",
+            "Quality gates and traceability",
+            "CI/CD pipeline setup"
+          ]
+        },
+        {
+          "id": "bmm-ux-designer",
+          "name": "Sally",
+          "title": "UX Designer",
+          "icon": "🎨",
+          "role": "User Experience Designer + UI Specialist",
+          "category": "planning",
+          "phase": "Phase 2 (Planning)",
+          "specialty": "UX design and user experience",
+          "workflows": [
+            "workflow-status",
+            "create-design",
+            "validate-design"
+          ],
+          "description": "Empathetic UX designer focused on user research, interaction design patterns, AI-assisted design generation, and accessibility.",
+          "when_to_use": [
+            "UX-heavy projects (Level 2-4)",
+            "Design thinking workshops",
+            "Creating user specifications and design artifacts",
+            "Validating UX designs"
+          ]
+        },
+        {
+          "id": "bmm-tech-writer",
+          "name": "Paige",
+          "title": "Technical Writer",
+          "icon": "📚",
+          "role": "Technical Documentation Specialist + Knowledge Curator",
+          "category": "support",
+          "phase": "All Phases",
+          "specialty": "Documentation and diagrams",
+          "workflows": [
+            "document-project"
+          ],
+          "description": "Patient technical writer who makes documentation approachable. Expert in Mermaid diagrams, API documentation, and architecture docs.",
+          "when_to_use": [
+            "Documenting brownfield projects (Phase 0)",
+            "Creating API documentation",
+            "Generating architecture documentation",
+            "Creating Mermaid diagrams",
+            "Writing user guides and tutorials"
+          ]
+        },
+        {
+          "id": "bmm-game-designer",
+          "name": "Samus Shepard",
+          "title": "Game Designer",
+          "icon": "🎲",
+          "role": "Lead Game Designer + Creative Vision Architect",
+          "category": "game_planning",
+          "phase": "Phase 1-2 (Games)",
+          "specialty": "Game design and creative vision",
+          "workflows": [
+            "workflow-init",
+            "workflow-status",
+            "brainstorm-game",
+            "create-game-brief",
+            "create-gdd",
+            "narrative",
+            "research"
+          ],
+          "description": "Enthusiastic game designer focused on player experience, core gameplay loops, progression systems, and game economy.",
+          "when_to_use": [
+            "Game brainstorming and ideation",
+            "Creating game briefs for vision and strategy",
+            "Game Design Documents (GDD) for Level 2-4 game projects",
+            "Narrative design for story-driven games"
+          ]
+        },
+        {
+          "id": "bmm-game-developer",
+          "name": "Link Freeman",
+          "title": "Game Developer",
+          "icon": "🕹️",
+          "role": "Senior Game Developer + Technical Implementation Specialist",
+          "category": "game_implementation",
+          "phase": "Phase 4 (Games)",
+          "specialty": "Game implementation",
+          "workflows": [
+            "workflow-status",
+            "develop-story",
+            "story-done",
+            "code-review"
+          ],
+          "description": "Direct and energetic game developer. Expert in Unity, Unreal, Godot, gameplay programming, and performance optimization.",
+          "when_to_use": [
+            "Implementing game stories",
+            "Game code reviews",
+            "Sprint retrospectives for game development"
+          ]
+        },
+        {
+          "id": "bmm-game-architect",
+          "name": "Cloud Dragonborn",
+          "title": "Game Architect",
+          "icon": "🏛️",
+          "role": "Principal Game Systems Architect + Technical Director",
+          "category": "game_architecture",
+          "phase": "Phase 3 (Games)",
+          "specialty": "Game systems architecture",
+          "workflows": [
+            "workflow-status",
+            "create-architecture",
+            "solutioning-gate-check",
+            "correct-course"
+          ],
+          "description": "Calm and measured game architect. Expert in multiplayer architecture, engine design, asset pipeline, and platform optimization.",
+          "when_to_use": [
+            "Game system architecture",
+            "Technical foundation design for games",
+            "Solutioning gate checks for game projects"
+          ]
+        }
+      ]
+    },
+    "cis": {
+      "module_name": "Creative Intelligence System",
+      "description": "Creative and strategic process facilitation agents",
+      "agents": [
+        {
+          "id": "cis-brainstorming-coach",
+          "name": "Carson",
+          "title": "Elite Brainstorming Specialist",
+          "icon": "🧠",
+          "role": "Master Brainstorming Facilitator + Innovation Catalyst",
+          "category": "creative",
+          "phase": "All Phases",
+          "specialty": "Brainstorming and innovation",
+          "workflows": [
+            "brainstorm"
+          ],
+          "description": "Energetic innovation facilitator with 20+ years leading breakthrough sessions. Cultivates psychological safety for wild ideas.",
+          "when_to_use": [
+            "Interactive brainstorming sessions",
+            "Innovation workshops",
+            "Creative ideation"
+          ]
+        },
+        {
+          "id": "cis-creative-problem-solver",
+          "name": "Dr. Quinn",
+          "title": "Master Problem Solver",
+          "icon": "🔬",
+          "role": "Systematic Problem-Solving Expert + Solutions Architect",
+          "category": "creative",
+          "phase": "All Phases",
+          "specialty": "Problem solving",
+          "workflows": [
+            "solve"
+          ],
+          "description": "Renowned problem-solving savant using TRIZ, Theory of Constraints, Systems Thinking, and Root Cause Analysis.",
+          "when_to_use": [
+            "Complex problem solving",
+            "Root cause analysis",
+            "Systematic solution design"
+          ]
+        },
+        {
+          "id": "cis-design-thinking-coach",
+          "name": "Maya",
+          "title": "Design Thinking Maestro",
+          "icon": "🎨",
+          "role": "Human-Centered Design Expert + Empathy Architect",
+          "category": "creative",
+          "phase": "All Phases",
+          "specialty": "Design thinking",
+          "workflows": [
+            "design"
+          ],
+          "description": "Design thinking virtuoso expert in empathy mapping, prototyping, and turning user insights into breakthrough solutions.",
+          "when_to_use": [
+            "Human-centered design processes",
+            "Empathy-driven methodologies",
+            "User insight transformation"
+          ]
+        },
+        {
+          "id": "cis-innovation-strategist",
+          "name": "Victor",
+          "title": "Disruptive Innovation Oracle",
+          "icon": "⚡",
+          "role": "Business Model Innovator + Strategic Disruption Expert",
+          "category": "strategic",
+          "phase": "All Phases",
+          "specialty": "Innovation strategy",
+          "workflows": [
+            "innovate"
+          ],
+          "description": "Legendary innovation strategist expert in Jobs-to-be-Done theory and Blue Ocean Strategy. Former McKinsey consultant.",
+          "when_to_use": [
+            "Business model innovation",
+            "Disruption opportunity identification",
+            "Strategic market analysis"
+          ]
+        },
+        {
+          "id": "cis-storyteller",
+          "name": "Sophia",
+          "title": "Master Storyteller",
+          "icon": "📖",
+          "role": "Expert Storytelling Guide + Narrative Strategist",
+          "category": "creative",
+          "phase": "All Phases",
+          "specialty": "Storytelling and narratives",
+          "workflows": [
+            "story"
+          ],
+          "description": "Master storyteller with 50+ years crafting compelling narratives. Expert in narrative frameworks and emotional psychology.",
+          "when_to_use": [
+            "Narrative development",
+            "Brand storytelling",
+            "Compelling communication"
+          ]
+        }
+      ]
+    },
+    "bmb": {
+      "module_name": "BMad Builder",
+      "description": "Meta-level BMad framework development agents",
+      "agents": [
+        {
+          "id": "bmb-bmad-builder",
+          "name": "BMad Builder",
+          "title": "BMad Builder",
+          "icon": "🔨",
+          "role": "BMad Framework Developer + Module Architect",
+          "category": "meta",
+          "phase": "All Phases",
+          "specialty": "BMad framework development",
+          "workflows": [
+            "audit-workflow",
+            "convert-legacy",
+            "create-agent",
+            "create-module",
+            "create-workflow",
+            "edit-agent",
+            "edit-module",
+            "edit-workflow",
+            "module-brief",
+            "redoc"
+          ],
+          "description": "Expert in creating and managing BMAD modules, agents, and workflows. Meta-level framework developer.",
+          "when_to_use": [
+            "Creating new BMAD agents",
+            "Building BMAD workflows",
+            "Module development",
+            "Framework documentation"
+          ]
+        }
+      ]
+    },
+    "core": {
+      "module_name": "BMad Core",
+      "description": "Core BMad system orchestration",
+      "agents": [
+        {
+          "id": "core-bmad-master",
+          "name": "BMad Master",
+          "title": "BMad Master",
+          "icon": "🧙",
+          "role": "BMad Master Executor, Knowledge Custodian, and Workflow Orchestrator",
+          "category": "meta",
+          "phase": "All Phases",
+          "specialty": "Orchestration and multi-agent coordination",
+          "workflows": [
+            "party-mode",
+            "brainstorming"
+          ],
+          "description": "Direct and comprehensive orchestrator. Moderates multi-agent discussions, maintains knowledge of all installed modules.",
+          "when_to_use": [
+            "Multi-agent party mode discussions",
+            "Meta-level orchestration",
+            "Understanding BMad capabilities",
+            "Facilitating cross-agent collaboration"
+          ]
+        }
+      ]
+    }
+  },
+  "agent_categories": {
+    "planning": {
+      "name": "Planning",
+      "description": "Requirements and planning documentation",
+      "icon": "📋",
+      "color": "blue"
+    },
+    "analysis": {
+      "name": "Analysis",
+      "description": "Discovery and requirements elicitation",
+      "icon": "📊",
+      "color": "purple"
+    },
+    "architecture": {
+      "name": "Architecture",
+      "description": "System design and technical architecture",
+      "icon": "🏗️",
+      "color": "indigo"
+    },
+    "implementation": {
+      "name": "Implementation",
+      "description": "Story development and coding",
+      "icon": "💻",
+      "color": "green"
+    },
+    "quality": {
+      "name": "Quality",
+      "description": "Testing and quality assurance",
+      "icon": "🧪",
+      "color": "red"
+    },
+    "support": {
+      "name": "Support",
+      "description": "Documentation and supplemental tasks",
+      "icon": "📚",
+      "color": "gray"
+    },
+    "creative": {
+      "name": "Creative",
+      "description": "Brainstorming and innovation",
+      "icon": "🧠",
+      "color": "pink"
+    },
+    "strategic": {
+      "name": "Strategic",
+      "description": "Business model and strategy",
+      "icon": "⚡",
+      "color": "yellow"
+    },
+    "game_planning": {
+      "name": "Game Planning",
+      "description": "Game design and creative vision",
+      "icon": "🎲",
+      "color": "purple"
+    },
+    "game_implementation": {
+      "name": "Game Development",
+      "description": "Game implementation",
+      "icon": "🕹️",
+      "color": "green"
+    },
+    "game_architecture": {
+      "name": "Game Architecture",
+      "description": "Game systems architecture",
+      "icon": "🏛️",
+      "color": "indigo"
+    },
+    "meta": {
+      "name": "Meta",
+      "description": "Framework and orchestration",
+      "icon": "🧙",
+      "color": "orange"
+    }
+  }
+}

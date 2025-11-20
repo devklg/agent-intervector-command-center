@@ -6,6 +6,10 @@ const compression = require('compression');
 const rateLimit = require('express-rate-limit');
 require('dotenv').config();
 
+// Database services
+const neonService = require('./services/neonService');
+const neo4jService = require('./services/neo4jService');
+
 const app = express();
 const PORT = process.env.PORT || 7500;
 
@@ -40,6 +44,14 @@ app.use('/api/communication', require('./routes/communication'));
 app.use('/api/projects', require('./routes/projects'));
 app.use('/api/restore', require('./routes/restore'));
 app.use('/api/health', require('./routes/health'));
+app.use('/api/knowledge', require('./routes/knowledge'));
+app.use('/api/tasks', require('./routes/tasks'));
+app.use('/api/bmad-agents', require('./routes/bmad-agents'));
+app.use('/api/activation', require('./routes/activation'));
+
+// Neo4j and Neon database routes
+app.use('/api/neo4j', require('./routes/neo4j'));
+app.use('/api/neon', require('./routes/neon'));
 
 // Health check endpoint
 app.get('/health', (req, res) => {
@@ -68,12 +80,61 @@ app.use('*', (req, res) => {
   });
 });
 
+// Initialize database connections
+async function initializeDatabases() {
+  console.log('\n📊 Initializing Knowledge Base...');
+
+  // Initialize Neon PostgreSQL
+  if (process.env.KNOWLEDGE_BASE_ENABLED === 'true' && process.env.NEON_DATABASE_URL) {
+    try {
+      await neonService.connect();
+    } catch (error) {
+      console.warn('⚠️  Neon PostgreSQL connection failed (optional feature):', error.message);
+    }
+  } else {
+    console.log('ℹ️  Neon PostgreSQL: Disabled or not configured');
+  }
+
+  // Initialize Neo4j
+  if (process.env.GRAPH_RELATIONSHIPS_ENABLED === 'true' && process.env.NEO4J_PASSWORD) {
+    try {
+      await neo4jService.connect();
+    } catch (error) {
+      console.warn('⚠️  Neo4j connection failed (optional feature):', error.message);
+    }
+  } else {
+    console.log('ℹ️  Neo4j Graph Database: Disabled or not configured');
+  }
+}
+
+// Graceful shutdown
+async function gracefulShutdown(signal) {
+  console.log(`\n${signal} received. Closing connections gracefully...`);
+
+  try {
+    await neonService.disconnect();
+    await neo4jService.disconnect();
+    console.log('✅ All database connections closed');
+    process.exit(0);
+  } catch (error) {
+    console.error('❌ Error during shutdown:', error);
+    process.exit(1);
+  }
+}
+
+process.on('SIGTERM', () => gracefulShutdown('SIGTERM'));
+process.on('SIGINT', () => gracefulShutdown('SIGINT'));
+
 // Start server
-app.listen(PORT, () => {
+app.listen(PORT, async () => {
   console.log(`\n🚀 Agent Command Center Backend`);
   console.log(`📡 Server running on port ${PORT}`);
   console.log(`🧠 ChromaDB Integration: ${process.env.CHROMA_HOST || 'localhost'}:${process.env.CHROMA_PORT || 7501}`);
   console.log(`🔗 Environment: ${process.env.NODE_ENV || 'development'}`);
+
+  // Initialize databases
+  await initializeDatabases();
+
   console.log(`\n⚡ Ready for Intervector Communication!\n`);
 });
 
